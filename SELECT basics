@@ -1,5 +1,8 @@
+http://sqlzoo.net/
+
+##########################
+
 http://sqlzoo.net/wiki/SELECT_basics 
-SELECT basics
 
 1 ) Modify it to show the population of Germany
 
@@ -11,19 +14,169 @@ WHERE name = 'Germany'
 SELECT name, population FROM world
 WHERE name IN ('Ireland', 'Iceland', 'Denmark');
 
-3) Which countries are not too small and not too big? BETWEEN allows range 
-checking (range specified is inclusive of boundary values). The example 
-below shows countries with an area of 250,000-300,000 sq. km. Modify it 
-to show the country and the area for countries with an area between 200,000 
-and 250,000.
+3) Which countries are not too small and not too big? BETWEEN allows range checking (range specified 
+is inclusive of boundary values). The example below shows countries with an area of 
+250,000-300,000 sq. km. Modify it to show the country and the area for countries with an area between 
+200,000 and 250,000.
 
 SELECT name, area FROM world
 WHERE area BETWEEN  200000 AND 250000
 
-4)
-5)
-6)
-7)
-8)
-9)
-10)
+##########################
+
+http://sqlzoo.net/wiki/SELECT_Quiz
+
+1) Select the code which produces this table
+
+SELECT name, population
+FROM world
+WHERE population BETWEEN 1000000 AND 1250000
+
+2) Pick the result you would obtain from this code:
+
+Table-E
+Albania	3200000
+Algeria	32900000
+
+3) Select the code which shows the countries that end in A or L
+
+SELECT name FROM world
+WHERE name LIKE '%a' OR name LIKE '%l'
+
+4) Pick the result from the query
+
+name	length(name)
+Italy	5
+Malta	5
+Spain	5
+
+5) Pick the result you would obtain from this code:
+SELECT name, area*2 FROM world WHERE population = 64000
+
+Andorra	936
+
+6) Select the code that would show the countries with an area larger than 50000 and a population 
+smaller than 10000000
+
+SELECT name, area, population
+FROM world
+WHERE area > 50000 AND population < 10000000
+
+7) Select the code that shows the population density of China, Australia, Nigeria and France
+
+SELECT name, population/area
+FROM world
+WHERE name IN ('China', 'Nigeria', 'France', 'Australia')
+
+##########################
+
+http://sqlzoo.net/wiki/SELECT_from_WORLD_Tutorial
+
+1) SELECT name, continent, population FROM world
+
+2) How to use WHERE to filter records. Show the name for the countries that have a population of at 
+least 200 million. 200 million is 200000000, there are eight zeros.
+
+SELECT name FROM world
+WHERE population>200000000
+
+3) Give the name and the per capita GDP for those countries with a population of at least 200 million.
+
+SELECT name, gdp/population
+FROM world
+WHERE population>200000000
+
+4) Show the name and population in millions for the countries of the continent 'South America'. Divide 
+the population by 1000000 to get population in millions.
+
+SELECT name, population/1000000
+FROM world
+WHERE continent='South America'
+
+5) Show the name and population for France, Germany, Italy
+
+SELECT name, population FROM world
+WHERE name in ('France', 'Germany', 'Italy')
+
+6) Show the countries which have a name that includes the word 'United'
+
+SELECT name FROM world
+WHERE name LIKE '%United%'
+
+7) Two ways to be big: A country is big if it has an area of more than 3 million sq km or it has a 
+population of more than 250 million.
+
+Show the countries that are big by area or big by population. Show name,population and area.
+
+SELECT name, population, area FROM world
+WHERE population>250000000 or area>3000000
+
+8) Exclusive OR (XOR). Show the countries that are big by area or big by population but not both. Show 
+name, population and area.
+
+Australia has a big area but a small population, it should be included. Indonesia has a big population 
+but a small area, it should be included. China has a big population and big area, it should be excluded.
+United Kingdom has a small population and a small area, it should be excluded.
+
+SELECT name, population, area FROM world
+WHERE population>250000000 xor area>3000000
+
+9) Show the name and population in millions and the GDP in billions for the countries of the continent 
+'South America'. Use the ROUND function to show the values to two decimal places.
+
+For South America show population in millions and GDP in billions both to 2 decimal places.
+
+SELECT name, round(population/1000000,2), round(gdp/1000000000,2) FROM world
+WHERE continent = 'South America'
+
+10) Show the name and per-capita GDP for those countries with a GDP of at least one trillion 
+(1000000000000; that is 12 zeros). Round this value to the nearest 1000. Show per-capita GDP for the 
+trillion dollar countries to the nearest $1000.
+
+SELECT name, round(gdp/population,-3) FROM world
+WHERE gdp > 1000000000000
+
+11) The CASE statement shown is used to substitute North America for Caribbean in the third column.
+Show the name - but substitute Australasia for Oceania - for countries beginning with N.
+
+SELECT name,
+CASE WHEN continent='Oceania' THEN 'Australasia'
+ELSE continent END
+FROM world
+WHERE name LIKE 'N%'
+
+12) Show the name and the continent - but substitute Eurasia for Europe and Asia; substitute America - 
+for each country in North America or South America or Caribbean. Show countries beginning with A or B
+
+select name,
+CASE WHEN continent='Europe' THEN 'Eurasia'
+WHEN continent='Asia' THEN 'Eurasia'
+WHEN continent='North America' THEN 'America'
+WHEN continent='South America' THEN 'America'
+WHEN continent='Caribbean' THEN 'America'
+ELSE continent END
+FROM world
+WHERE name LIKE 'A%' or name LIKE 'B%'
+
+13) Put the continents right...
+
+Oceania becomes Australasia
+Countries in Eurasia and Turkey go to Europe/Asia
+Caribbean islands starting with 'B' go to North America, other Caribbean islands go to South America
+Order by country name in ascending order
+Test your query using the WHERE clause with the following:
+WHERE tld IN ('.ag','.ba','.bb','.ca','.cn','.nz','.ru','.tr','.uk')
+Show the name, the original continent and the new continent of all countries.
+
+SELECT name AS Country, continent as Continent,
+CASE WHEN continent='Oceania' THEN 'Australasia'
+WHEN continent = 'Eurasia' THEN 'Europe/Asia'
+WHEN name='Turkey' THEN 'Europe/Asia'
+WHEN continent='Caribbean' AND name LIKE 'B%' THEN 'North America'
+WHEN continent='Caribbean' AND name NOT LIKE 'B%' THEN 'South America'
+ELSE continent END AS "New Continent"
+FROM world
+WHERE tld IN ('.ag','.ba','.bb','.ca','.cn','.nz','.ru','.tr','.uk')
+ORDER BY Country;
+
+##########################
